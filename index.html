@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<!--
+  ==========================================================================
+  พอร์ตโฟลิโอธีม "Code Editor" — วิธีแก้ไข
+  ทุกจุดที่ต้องแก้จะมีคอมเมนต์ 🔧 แก้ตรงนี้ กำกับไว้ด้านบน
+  และในหน้าเว็บเองก็จะมีข้อความ [ใส่...ตรงนี้] ให้เห็นชัดเจน
+  โครงสร้างไฟล์: 1) HTML  2) CSS (ในแท็ก <style>)  3) JS (ในแท็ก <script>)
+  รูปภาพ: สร้างโฟลเดอร์ assets/ ไว้ข้างไฟล์นี้ แล้ววางรูปตามชื่อที่ระบุในคอมเมนต์
+  ==========================================================================
+-->
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- 🔧 แก้ตรงนี้: ชื่อเรื่องของแท็บเบราว์เซอร์ -->
+<title>Natthaphong | Developer Portfolio</title>
+<!-- 🔧 แก้ตรงนี้: คำอธิบายสั้นๆ สำหรับ SEO -->
+<meta name="description" content="Portfolio [Natthaphong] — Developer" />
+<!-- 🔧 แก้ตรงนี้: favicon (วางไฟล์ assets/favicon.png) -->
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ===================== DESIGN TOKENS ===================== */
+  :root{
+    --void:#12141c;
+    --panel:#1a1d2b;
+    --panel-alt:#20243573;
+    --line:#2b2f45;
+    --text:#e9e6de;
+    --muted:#8b8fa8;
+    --purple:#b296ff;   /* keyword */
+    --amber:#ffb870;    /* string */
+    --teal:#6fdcc4;     /* function */
+    --pink:#ff9ecb;     /* tag / danger-ish accent, used sparingly */
+    --font-mono:'JetBrains Mono', ui-monospace, monospace;
+    --font-body:'Sora', system-ui, sans-serif;
+    --radius:10px;
+    --maxw:1080px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--void);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+
+  ::selection{background:var(--purple); color:var(--void);}
+
+  :focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+
+  /* ===================== TITLE BAR (คำนำ / ไม่ต้องแก้) ===================== */
+  .titlebar{
+    display:flex; align-items:center; gap:10px;
+    padding:10px 18px;
+    background:#0f1119;
+    border-bottom:1px solid var(--line);
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+  }
+  .dots{display:flex; gap:6px;}
+  .dot{width:11px; height:11px; border-radius:50%;}
+  .dot.r{background:#ff5f56;}
+  .dot.y{background:#ffbd2e;}
+  .dot.g{background:#27c93f;}
+  .titlebar .filename{margin-left:6px; opacity:.8;}
+
+  /* ===================== TAB NAV ===================== */
+  .tabbar{
+    position:sticky; top:0; z-index:50;
+    display:flex;
+    overflow-x:auto;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    font-family:var(--font-mono);
+    scrollbar-width:none;
+  }
+  .tabbar::-webkit-scrollbar{display:none;}
+  .tabbar a{
+    flex:0 0 auto;
+    padding:14px 20px;
+    font-size:13px;
+    text-decoration:none;
+    color:var(--muted);
+    border-right:1px solid var(--line);
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:color .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .tabbar a:hover{color:var(--text); background:var(--panel-alt);}
+  .tabbar a.active{color:var(--teal); border-bottom-color:var(--teal); background:var(--panel-alt);}
+  .tabbar a .dim{opacity:.55;}
+
+  /* ===================== SECTION SHELL ===================== */
+  section{padding:96px 0 40px;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 8px;
+  }
+  .eyebrow .kw{color:var(--purple);}
+  .eyebrow .fn{color:var(--teal);}
+  .eyebrow .str{color:var(--amber);}
+  h2.section-title{
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:clamp(22px, 3vw, 30px);
+    margin:0 0 40px;
+    color:var(--text);
+  }
+  h2.section-title .punc{color:var(--muted);}
+
+  /* ===================== HERO ===================== */
+  .hero{padding-top:64px;}
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.3fr 0.9fr;
+    gap:56px;
+    align-items:center;
+  }
+  .code-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .photo-frame{
+    aspect-ratio:1/1;
+    border:2px dashed var(--line);
+    border-radius:var(--radius);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    padding:24px;
+    background:var(--panel);
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--muted);
+  }
+  .photo-frame img{width:100%; height:100%; object-fit:cover; border-radius:calc(var(--radius) - 2px);}
+  .code-card .bar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 14px;
+    background:var(--panel-alt);
+    border-bottom:1px solid var(--line);
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+  }
+  .code-body{
+    display:flex;
+    font-family:var(--font-mono);
+    font-size:14.5px;
+    padding:20px 0;
+  }
+  .gutter{
+    padding:0 14px;
+    color:#4a4e66;
+    text-align:right;
+    user-select:none;
+  }
+  .gutter div{height:26px;}
+  .code-lines{padding:0 18px 0 4px;}
+  .code-lines div{height:26px; white-space:nowrap;}
+  .code-lines .kw{color:var(--purple);}
+  .code-lines .prop{color:#88c0ff;}
+  .code-lines .str{color:var(--amber);}
+  .code-lines .fn{color:var(--teal);}
+  .code-lines .punc{color:var(--muted);}
+  .code-lines .comment{color:#5b5f7a; font-style:italic;}
+  .cursor{
+    display:inline-block; width:8px; height:16px;
+    background:var(--teal);
+    margin-left:2px;
+    animation:blink 1s step-end infinite;
+    vertical-align:-2px;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+
+
+  .cta-row{display:flex; gap:14px; margin-top:26px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--font-mono);
+    font-size:13.5px;
+    padding:12px 22px;
+    border-radius:8px;
+    text-decoration:none;
+    border:1px solid var(--line);
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn.primary{background:var(--teal); color:var(--void); border-color:var(--teal); font-weight:600;}
+  .btn.primary:hover{background:#8be8d3;}
+  .btn.ghost{color:var(--text); background:transparent;}
+  .btn.ghost:hover{border-color:var(--muted);}
+
+  /* ===================== SKILLS ===================== */
+  .skills-row{display:flex; flex-wrap:wrap; gap:10px;}
+  .skill-tag{
+    font-family:var(--font-mono);
+    font-size:13px;
+    padding:8px 14px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:var(--amber);
+  }
+  .skill-tag::before{content:"import "; color:var(--muted);}
+
+  /* ===================== PROJECTS ===================== */
+  .project-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin-bottom:28px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .project-card .thumb{
+    background:var(--panel-alt);
+    border-right:1px solid var(--line);
+    min-height:220px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--muted);
+    text-align:center;
+    padding:20px;
+  }
+  .project-card .thumb img{width:100%; height:100%; object-fit:cover;}
+  .project-body{padding:24px 26px;}
+  .project-body h3{
+    font-family:var(--font-mono);
+    font-size:18px;
+    margin:0 0 10px;
+    color:var(--text);
+  }
+  .project-body h3 .punc{color:var(--muted);}
+  .project-body p{color:var(--muted); font-size:14.5px; margin:0 0 16px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;}
+  .tag-row span{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    padding:4px 10px;
+    border-radius:6px;
+    background:var(--panel-alt);
+    color:var(--teal);
+  }
+  .link-row{display:flex; gap:18px; font-family:var(--font-mono); font-size:13px;}
+  .link-row a{color:var(--purple); text-decoration:none; border-bottom:1px solid transparent;}
+  .link-row a:hover{border-bottom-color:var(--purple);}
+
+  @media (max-width:760px){
+    .project-card{grid-template-columns:1fr;}
+    .project-card .thumb{border-right:none; border-bottom:1px solid var(--line);}
+    .cert-image{width:130px;height:90px;}
+  }
+
+  /* ===================== CERTIFICATES ===================== */
+  .cert-list{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .cert-item{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
+    padding:20px 24px;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .cert-item:last-child{border-bottom:none;}
+  .cert-main{display:flex; align-items:center; gap:16px;}
+  .cert-image{width:340px;height:210px;object-fit:cover;border:1px solid var(--line);border-radius:8px;transition:.3s;cursor:pointer;flex-shrink:0;}.cert-image:hover{transform:scale(1.03)}
+  .cert-badge{
+    width:44px; height:44px; border-radius:8px;
+    background:var(--panel-alt);
+    border:1px dashed var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:10px; color:var(--muted);
+    text-align:center; flex-shrink:0;
+    overflow:hidden;
+  }
+  .cert-badge img{width:100%; height:100%; object-fit:contain;}
+  .cert-name{font-weight:1000; font-size:15px;}
+  .cert-meta{font-family:var(--font-mono); font-size:12.5px; color:var(--muted); margin-top:3px;}
+  /* ===================== EDUCATION ===================== */
+  .edu-list{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .edu-item{
+    padding:24px 26px;
+    border-bottom:1px solid var(--line);
+  }
+  .edu-item:last-child{border-bottom:none;}
+  .edu-school{font-weight:700; font-size:16px; color:var(--text);}
+  .edu-year{
+    font-family:var(--font-mono); font-size:12.5px;
+    color:var(--muted); margin:4px 0 12px;
+  }
+  .edu-detail{
+    font-size:14px; margin:4px 0; color:var(--text);
+  }
+  .edu-detail .key{
+    font-family:var(--font-mono); font-size:12.5px;
+    color:var(--purple); margin-right:6px;
+  }
+  .edu-detail .val{color:var(--amber);}
+
+  /* ===================== CONTACT ===================== */
+  .contact-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:40px;
+    font-family:var(--font-mono);
+  }
+  .contact-card .line{margin:0 0 14px; font-size:14.5px;}
+  .contact-card .key{color:var(--purple);}
+  .contact-card .val{color:var(--amber);}
+  .social-row{display:flex; gap:16px; margin-top:24px; flex-wrap:wrap;}
+  .social-row a{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 18px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    text-decoration:none;
+    font-size:13.5px;
+    color:var(--text);
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .social-row a:hover{border-color:var(--teal); transform:translateY(-2px);}
+
+  /* ===================== STATUS BAR ===================== */
+  .statusbar{
+    display:flex; justify-content:space-between;
+    padding:8px 18px;
+    background:#0f1119;
+    border-top:1px solid var(--line);
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--muted);
+  }
+  .statusbar span{margin-right:16px;}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr 130px; gap:20px; align-items:start;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- แถบชื่อไฟล์บนสุด (ตกแต่งอย่างเดียว ไม่ต้องแก้ก็ได้) -->
+  <div class="titlebar">
+    <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <!-- 🔧 แก้ตรงนี้ (ถ้าอยากเปลี่ยนข้อความบนแถบ): -->
+    <span class="filename">Portfolio — Natthaphong</span>
+  </div>
+
+  <!-- แท็บเมนู ใช้เลื่อนไปแต่ละ section -->
+  <nav class="tabbar" id="tabbar">
+    <a href="#about" class="tab-link active" data-target="about">About<span class="dim"></span></a>
+    <a href="#education" class="tab-link" data-target="education">Education<span class="dim"></span></a>
+    <a href="#skills" class="tab-link" data-target="skills">Skills<span class="dim"></span></a>
+    <a href="#projects" class="tab-link" data-target="projects">Projects<span class="dim"></span></a>
+    <a href="#certificates" class="tab-link" data-target="certificates">Certificates<span class="dim"></span></a>
+    <a href="#contact" class="tab-link" data-target="contact">Contact<span class="dim"></span></a>
+  </nav>
+
+  <!-- ===================== HERO / ABOUT ===================== -->
+  <section id="about" class="hero">
+    <div class="wrap hero-grid">
+      <div class="code-card">
+        <div class="bar"><span>about</span><span></span></div>
+        <div class="code-body">
+          <div class="gutter">
+            <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
+          </div>
+          <div class="code-lines">
+            <div><span class="kw">const</span> developer <span class="punc">=</span> <span class="punc">{</span></div>
+            <!-- 🔧 แก้ตรงนี้: ชื่อ-นามสกุลของคุณ -->
+            <div>&nbsp;&nbsp;<span class="prop">name:</span> <span class="str">"Natthaphong Phuylad"<span class="punc">,</span></div>
+            <!-- 🔧 แก้ตรงนี้: ชื่อเล่น -->
+            <div>&nbsp;&nbsp;<span class="prop">nickname:</span> <span class="str">"Dio"</span><span class="punc">,</span></div>
+            <!-- 🔧 แก้ตรงนี้: ตำแหน่ง/สายงาน -->
+            <div>&nbsp;&nbsp;<span class="prop">role:</span> <span class="str">"Cyber security"</span><span class="punc">,</span></div>
+            <div>&nbsp;&nbsp;<span class="prop">location:</span> <span class="str">"ประเทศไทย"</span><span class="punc">,</span></div>
+            <!-- 🔧 แก้ตรงนี้: วันเกิด (รูปแบบ วัน/เดือน/ปี) -->
+            <div>&nbsp;&nbsp;<span class="prop">birthday:</span> <span class="str">"25/11/2004"</span><span class="punc">,</span></div>
+            <!-- 🔧 แก้ตรงนี้: อายุ -->
+            <div>&nbsp;&nbsp;<span class="prop">age:</span> <span class="str">21</span><span class="punc">,</span></div>
+            <!-- 🔧 แก้ตรงนี้: เพศ -->
+            <div>&nbsp;&nbsp;<span class="prop">gender:</span> <span class="str">"ชาย"</span><span class="punc">,</span></div>
+            <!-- 🔧 แก้ตรงนี้: คำอธิบายตัวเองสั้นๆ -->
+            <div>&nbsp;&nbsp;<span class="prop">bio:</span> <span class="str">"นักศึกษา Computer Science ที่สนใจด้าน Cyber security"</span></div>
+            <div><span class="punc">}</span><span class="cursor"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- 🔧 แก้ตรงนี้: เปลี่ยน src="assets/profile.png" เป็นรูปของคุณ แล้วลบ span ข้อความออก -->
+        <div class="photo-frame"><img src="assets/profile.png" alt="รูปโปรไฟล์"></div>
+        <div class="cta-row">
+          <!-- 🔧 แก้ตรงนี้: ลิงก์ไฟล์ Resume/CV (วางไฟล์ที่ assets/resume.pdf) -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EDUCATION ===================== -->
+  <section id="education">
+    <div class="wrap">
+      <p class="eyebrow"><span class="punc">[</span> <span class="str">"education"</span><span class="punc">:</span> <span class="punc">[...]</span> <span class="punc">]</span></p>
+      <h2 class="section-title">Education<span class="punc"> // ประวัติการศึกษา</span></h2>
+
+      <div class="edu-list">
+        <!-- ============ การศึกษาที่ 1 (คัดลอก block นี้เพื่อเพิ่มรายการใหม่) ============ -->
+        <div class="edu-item">
+          <!-- 🔧 แก้ตรงนี้: ชื่อโรงเรียน/สถาบัน -->
+          <div class="edu-school">Sisaket Technical College</div>
+          <!-- 🔧 แก้ตรงนี้: ปีที่เรียน (ปีเดียว หรือ ช่วงปี เช่น 2021 - 2025) -->
+          <div class="edu-year">2020 - 2022</div>
+          <!-- 🔧 แก้ตรงนี้: สาขาที่เรียน -->
+          <div class="edu-detail"><span class="key">Department:</span><span class="val">Electronics</span></div>
+          <!-- 🔧 แก้ตรงนี้: เกรดเฉลี่ย (GPA) -->
+          <div class="edu-detail"><span class="key">GPA:</span><span class="val">3.45</span></div>
+        </div>
+
+        <!-- ============ การศึกษาที่ 2 (ตัวอย่าง) ============ -->
+        <div class="edu-item">
+          <!-- 🔧 แก้ตรงนี้: ชื่อมหาวิทยาลัย -->
+          <div class="edu-school">Bangkok University</div>
+          <!-- 🔧 แก้ตรงนี้: ปีที่เรียน -->
+          <div class="edu-year">2023 - 2025 (ยังไม่จบการศึกษา)</div>
+          <!-- 🔧 แก้ตรงนี้: คณะ/สาขาวิชา -->
+          <div class="edu-detail"><span class="key">School:</span><span class="val">Information Technology and Innovation</span></div>
+          <div class="edu-detail"><span class="key">Major:</span><span class="val">Computer Science - Data Science and Cybersecurity</span></div>
+          <!-- 🔧 แก้ตรงนี้: เกรดเฉลี่ย (GPA) -->
+          <div class="edu-detail"><span class="key">GPA:</span><span class="val">2.79</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SKILLS ===================== -->
+  <section id="skills">
+    <div class="wrap">
+      <p class="eyebrow"><span class="kw">import</span> <span class="punc">{</span> skills <span class="punc">}</span> <span class="kw"></span> <span class="str"></span></p>
+      <h2 class="section-title">Skills<span class="punc"> // เครื่องมือที่ใช้</span></h2>
+      <!-- 🔧 แก้ตรงนี้: เพิ่ม/ลบ/แก้รายชื่อทักษะได้ตามต้องการ (แต่ละ span คือ 1 แท็ก) -->
+      <div class="skills-row">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Kali Linux</span>
+        <span class="skill-tag">Arduino</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section id="projects">
+    <div class="wrap">
+      <p class="eyebrow"><span class="fn">function</span> <span class="punc">renderProjects</span><span class="punc">()</span> <span class="punc">{</span></p>
+      <h2 class="section-title">Projects<span class="punc"> // ผลงานของคุณ</span></h2>
+
+      <!-- ============ โปรเจกต์ที่ 1 (คัดลอกทั้ง block นี้เพื่อเพิ่มโปรเจกต์ใหม่) ============ -->
+      <div class="project-card">
+        <!-- 🔧 แก้ตรงนี้: รูปโปรเจกต์ (วางไฟล์ที่ assets/project-1.jpg) -->
+        <div class="thumb">
+          <img src="assets\project.png" alt="ภาพโปรเจกต์ 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <span style="display:none">🖼 ใส่ภาพหน้าจอโปรเจกต์ตรงนี้<br>(assets/project-1.jpg)</span>
+        </div>
+        <div class="project-body">
+          <!-- 🔧 แก้ตรงนี้: ชื่อโปรเจกต์ -->
+          <h3><span class="punc">01.</span> Competency Assessment System </h3>
+          <!-- 🔧 แก้ตรงนี้: คำอธิบายโปรเจกต์ -->
+          <p>[ระบบประเมินและพัฒนาศักยภาพบุคลากร (Competency Assessment & Individual Development Plan System)]</p>
+          <!-- 🔧 แก้ตรงนี้: แท็กเทคโนโลยีที่ใช้ -->
+          <div class="tag-row"><span>React</span><span>Node.js</span><span>postgres / mysql</span></div>
+          <!-- 🔧 แก้ตรงนี้: ลิงก์เดโมและซอร์สโค้ด -->
+          <div class="link-row">
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ โปรเจกต์ที่ 2 (ตัวอย่าง — ลบหรือแก้ไขได้) ============ -->
+    </div>
+  </section>
+
+  <!-- ===================== CERTIFICATES ===================== -->
+  <section id="certificates">
+    <div class="wrap">
+      <p class="eyebrow"><span class="punc">[</span> <span class="str">"certificates"</span><span class="punc">:</span> <span class="punc">[...]</span> <span class="punc">]</span></p>
+      <h2 class="section-title">Certificates<span class="punc"> // ใบเซอร์และประกาศนียบัตร</span></h2>
+
+      <div class="cert-list">
+        <!-- ============ ใบเซอร์ที่ 1 (คัดลอก block นี้เพื่อเพิ่มใบใหม่) ============ -->
+        <div class="cert-item">
+          <div class="cert-main"><img src="assets/certificate1.png" class="cert-image" alt="Certificate">
+            <div>
+              <!-- 🔧 แก้ตรงนี้: ชื่อใบเซอร์ และหน่วยงานที่ออกให้ -->
+              <div class="cert-name">หลักสูตรความมั่นคงปลอดภัยไซเบอร์ ระดับพื้นฐาน (Cybersecurity Foundation Course) — สำนักงานคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ (สกมช.)</div>
+              <!-- 🔧 แก้ตรงนี้: ปีที่ได้รับ -->
+              <div class="cert-meta">ได้รับปี 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-item">
+          <div class="cert-main"><img src="assets/certificate2.png" class="cert-image" alt="Certificate">
+            <div>
+              <!-- 🔧 แก้ตรงนี้: ชื่อใบเซอร์ และหน่วยงานที่ออกให้ -->
+              <div class="cert-name">Official Practice Exam: AWS Certified AI Practitioner (AIF-C01) — AWS Training &amp; Certification</div>
+              <!-- 🔧 แก้ตรงนี้: ปีที่ได้รับ -->
+              <div class="cert-meta">ได้รับปี 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-item">
+          <div class="cert-main"><img src="assets/certificate3.png" class="cert-image" alt="Certificate">
+            <div>
+              <!-- 🔧 แก้ตรงนี้: ชื่อใบเซอร์ และหน่วยงานที่ออกให้ -->
+              <div class="cert-name">AWS Academy Graduate — Machine Learning for Natural Language Processing (Training Badge) — AWS Academy</div>
+              <!-- 🔧 แก้ตรงนี้: ปีที่ได้รับ -->
+              <div class="cert-meta">ได้รับปี 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ ใบเซอร์ที่ 2 (ตัวอย่าง) ============ -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow"><span class="kw">export default</span> <span class="fn">contact</span></p>
+      <h2 class="section-title">Contact<span class="punc"> // ติดต่อฉัน</span></h2>
+
+      <div class="contact-card">
+        <!-- 🔧 แก้ตรงนี้: อีเมลของคุณ (แก้ทั้งข้อความและ href="mailto:...") -->
+        <p class="line"><span class="key">email:</span> <a class="val" href="pyeoywuqww063@gmail.com">pyeoywuqww063@gmail.com</a></p>
+        <!-- 🔧 แก้ตรงนี้: เบอร์โทร (ลบทิ้งได้ถ้าไม่อยากเปิดเผย) -->
+        <p class="line"><span class="key">phone:</span> <span class="val">063-962-7122
+        <!-- 🔧 แก้ตรงนี้: จังหวัด/เมืองที่อยู่ -->
+        <p class="line"><span class="key">location:</span> <span class="val">ประเทศไทย</span></p>
+
+        <!-- 🔧 แก้ตรงนี้: ลิงก์โซเชียลมีเดีย — ลบ <a> อันไหนที่ไม่ใช้ หรือเพิ่มอันใหม่ตามแบบเดิม -->
+        <div class="social-row">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="statusbar">
+    <div>
+      <span>⎇ main</span>
+      <span>UTF-8</span>
+      <span>Ln 1, Col 1</span>
+    </div>
+    <!-- 🔧 แก้ตรงนี้: ชื่อที่แสดงในลิขสิทธิ์ท้ายเว็บ -->
+    <div><span id="year"></span> © Natthaphong</div>
+  </div>
+
+<script>
+  // แสดงปีปัจจุบันอัตโนมัติที่ status bar — ไม่ต้องแก้ตรงนี้
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ไฮไลต์แท็บที่กำลังดูอยู่ตามการเลื่อนหน้าจอ — ไม่ต้องแก้ตรงนี้
+  const tabs = document.querySelectorAll('.tab-link');
+  const sections = [...tabs].map(t => document.getElementById(t.dataset.target));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        tabs.forEach(t => t.classList.toggle('active', t.dataset.target === id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+  sections.forEach(s => s && observer.observe(s));
+</script>
+</body>
+</html>
