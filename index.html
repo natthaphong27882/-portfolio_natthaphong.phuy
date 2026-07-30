@@ -335,6 +335,144 @@
   }
   .edu-detail .val{color:var(--amber);}
 
+  /* ===================== ABOUT INTRO TEXT ===================== */
+  .intro-block{
+    grid-column:1 / -1;
+    margin-top:36px;
+    padding-top:36px;
+    border-top:1px solid var(--line);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+  }
+  .intro-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  .intro-card h3{
+    font-size:14px;
+    font-family:var(--font-mono);
+    color:var(--teal);
+    margin:0 0 10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .intro-card h3::before{content:"▸"; color:var(--purple);}
+  .intro-card p{
+    font-size:14.5px;
+    line-height:1.75;
+    color:var(--text);
+    margin:0;
+  }
+  @media (max-width:760px){
+    .intro-block{grid-template-columns:1fr;}
+  }
+
+  /* ===================== SOFT SKILLS ===================== */
+  .softskills-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+    gap:22px;
+  }
+  .softskill-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px 20px;
+    text-align:center;
+    transition:.25s;
+  }
+  .softskill-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--teal);
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  .softskill-avatar{
+    width:76px; height:76px;
+    margin:0 auto 16px;
+    border-radius:50%;
+    overflow:hidden;
+    border:2px solid var(--line);
+    background:var(--panel-alt);
+  }
+  .softskill-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .softskill-name{
+    font-weight:700;
+    font-size:15px;
+    color:var(--text);
+    margin-bottom:6px;
+  }
+  .softskill-desc{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+
+  /* ===================== WORK EXPERIENCE (ใช้ในหัวข้อ Soft Skills) ===================== */
+  .job-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:20px;
+  }
+  .job-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 22px 20px;
+    transition:.25s;
+  }
+  .job-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--teal);
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+  }
+  .job-badge{
+    display:inline-block;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--teal);
+    background:var(--panel-alt);
+    border:1px solid var(--line);
+    padding:3px 9px;
+    border-radius:5px;
+    margin-bottom:14px;
+  }
+  .job-role{
+    font-weight:700;
+    font-size:16px;
+    color:var(--text);
+    margin-bottom:2px;
+  }
+  .job-company{
+    font-size:13px;
+    color:var(--purple);
+    font-family:var(--font-mono);
+    margin-bottom:4px;
+  }
+  .job-period{
+    font-size:12px;
+    color:var(--muted);
+    font-family:var(--font-mono);
+    margin-bottom:14px;
+  }
+  .job-desc{
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.6;
+    margin-bottom:14px;
+  }
+  .job-skills{display:flex; flex-wrap:wrap; gap:8px;}
+  .job-skills span{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--teal);
+    background:var(--panel-alt);
+    border:1px solid var(--line);
+    padding:4px 9px;
+    border-radius:5px;
+  }
+
   /* ===================== CONTACT ===================== */
   .contact-card{
     background:var(--panel);
@@ -390,6 +528,7 @@
     <a href="#about" class="tab-link active" data-target="about">About<span class="dim"></span></a>
     <a href="#education" class="tab-link" data-target="education">Education<span class="dim"></span></a>
     <a href="#skills" class="tab-link" data-target="skills">Skills<span class="dim"></span></a>
+    <a href="#softskills" class="tab-link" data-target="softskills">Soft Skills<span class="dim"></span></a>
     <a href="#projects" class="tab-link" data-target="projects">Projects<span class="dim"></span></a>
     <a href="#certificates" class="tab-link" data-target="certificates">Certificates<span class="dim"></span></a>
     <a href="#contact" class="tab-link" data-target="contact">Contact<span class="dim"></span></a>
@@ -420,7 +559,7 @@
             <!-- 🔧 แก้ตรงนี้: เพศ -->
             <div>&nbsp;&nbsp;<span class="prop">gender:</span> <span class="str">"ชาย"</span><span class="punc">,</span></div>
             <!-- 🔧 แก้ตรงนี้: คำอธิบายตัวเองสั้นๆ -->
-            <div>&nbsp;&nbsp;<span class="prop">bio:</span> <span class="str">"นักศึกษา Computer Science ที่สนใจด้าน Cyber security"</span></div>
+            <div>&nbsp;&nbsp;<span class="prop">bio:</span> <span class="str">"นักศึกษา Computer Science ที่สนใจด้าน Cybersecurity และ Data Science ชอบเรียนรู้เทคโนโลยีใหม่ ๆ อยู่เสมอ"</span></div>
             <div><span class="punc">}</span><span class="cursor"></span></div>
           </div>
         </div>
@@ -433,6 +572,19 @@
           <!-- 🔧 แก้ตรงนี้: ลิงก์ไฟล์ Resume/CV (วางไฟล์ที่ assets/resume.pdf) -->
         </div>
       </div>
+
+      <div class="intro-block">
+        <div class="intro-card">
+          <h3>แนะนำตัว</h3>
+          <!-- 🔧 แก้ตรงนี้: คำแนะนำตัวคร่าวๆ -->
+          <p>สวัสดีครับ ผมณัฐพงษ์ ผุยลัด ชื่อเล่น ดีโอ นักศึกษาสาขา Computer Science (Data Science and Cybersecurity) คณะ Information Technology and Innovation มหาวิทยาลัยกรุงเทพ สนใจงานด้าน Cybersecurity และ Data Science เป็นพิเศษ ชอบลงมือทำโปรเจกต์จริงและเรียนรู้เครื่องมือใหม่ ๆ อยู่เสมอ ทั้งการเขียนโปรแกรมและการทดสอบระบบความปลอดภัย</p>
+        </div>
+        <div class="intro-card">
+          <h3>เหตุผลที่อยากฝึกงาน</h3>
+          <!-- 🔧 แก้ตรงนี้: เหตุผลที่อยากฝึกงาน -->
+          <p>อยากนำความรู้ที่เรียนมาไปใช้แก้ปัญหาจริงในองค์กร ได้ฝึกทักษะการทำงานร่วมกับทีมมืออาชีพ เรียนรู้กระบวนการทำงานจริงด้าน Cybersecurity/Data Science นอกเหนือจากในห้องเรียน และสร้างประสบการณ์เพื่อพัฒนาตัวเองให้พร้อมสำหรับการทำงานในอนาคต</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -440,7 +592,7 @@
   <section id="education">
     <div class="wrap">
       <p class="eyebrow"><span class="punc">[</span> <span class="str">"education"</span><span class="punc">:</span> <span class="punc">[...]</span> <span class="punc">]</span></p>
-      <h2 class="section-title">Education<span class="punc">  ประวัติการศึกษา</span></h2>
+      <h2 class="section-title">Education<span class="punc"> ประวัติการศึกษา</span></h2>
 
       <div class="edu-list">
         <!-- ============ การศึกษาที่ 1 (คัดลอก block นี้เพื่อเพิ่มรายการใหม่) ============ -->
@@ -475,12 +627,78 @@
   <section id="skills">
     <div class="wrap">
       <p class="eyebrow"><span class="kw">import</span> <span class="punc">{</span> skills <span class="punc">}</span> <span class="kw"></span> <span class="str"></span></p>
-      <h2 class="section-title">Skills<span class="punc"> // เครื่องมือที่ใช้</span></h2>
+      <h2 class="section-title">Skills<span class="punc"> เครื่องมือที่ใช้</span></h2>
       <!-- 🔧 แก้ตรงนี้: เพิ่ม/ลบ/แก้รายชื่อทักษะได้ตามต้องการ (แต่ละ span คือ 1 แท็ก) -->
       <div class="skills-row">
         <span class="skill-tag">Python</span>
-        <span class="skill-tag">Kali Linux</span>
+        <span class="skill-tag">C</span>
+        <span class="skill-tag">ubuntu / Linux</span>
         <span class="skill-tag">Arduino</span>
+        <!-- 🔧 แก้ตรงนี้: เพิ่มทักษะใหม่ตรงนี้ -->
+        <span class="skill-tag">mysql</span>
+        <span class="skill-tag">React</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SOFT SKILLS ===================== -->
+  <section id="softskills">
+    <div class="wrap">
+      <p class="eyebrow"><span class="punc">[</span> <span class="str">"work-experience"</span><span class="punc">:</span> <span class="punc">[...]</span> <span class="punc">]</span></p>
+      <h2 class="section-title">Soft Skills<span class="punc"> จากประสบการณ์ทำงานจริง</span></h2>
+
+      <div class="job-grid">
+        <!-- ============ งานที่ 1: Home Pro วังน้อย (ฝึกงาน ปวช.) ============ -->
+        <div class="job-card">
+          <span class="job-badge">ฝึกงาน · ปวช.</span>
+          <div class="job-role">พนักงานฝึกงาน — สต็อกสินค้า/เอกสาร</div>
+          <div class="job-company">Home Pro วังน้อย</div>
+          <div class="job-desc">เช็คสต็อกสินค้าในคลัง และจัดการเอกสารที่เกี่ยวข้องกับรถขนส่งที่เข้ามารับสินค้า</div>
+          <div class="job-skills">
+            <span>ความละเอียดรอบคอบ</span>
+            <span>การจัดการเอกสาร</span>
+            <span>ความรับผิดชอบ</span>
+          </div>
+        </div>
+
+        <!-- ============ งานที่ 2: MIXUE ============ -->
+        <div class="job-card">
+          <span class="job-badge">พาร์ทไทม์ · ปี 1-3</span>
+          <div class="job-role">แคชเชียร์ / เตรียมวัตถุดิบ / ชงเครื่องดื่ม</div>
+          <div class="job-company">MIXUE</div>
+          <div class="job-desc">รับออเดอร์และคิดเงินหน้าร้าน เตรียมวัตถุดิบและชงเครื่องดื่มให้ทันในช่วงเวลาเร่งด่วน</div>
+          <div class="job-skills">
+            <span>การบริการลูกค้า</span>
+            <span>ทำงานภายใต้ความกดดัน</span>
+            <span>ความรวดเร็วแม่นยำ</span>
+          </div>
+        </div>
+
+        <!-- ============ งานที่ 3: Heaven Rangsit - Highlight ============ -->
+        <div class="job-card">
+          <span class="job-badge">พาร์ทไทม์ · ปี 1-3</span>
+          <div class="job-role">เด็กเสิร์ฟ</div>
+          <div class="job-company">Heaven Rangsit - Highlight</div>
+          <div class="job-desc">ดูแลลูกค้า เสิร์ฟอาหารและเครื่องดื่มในสถานบันเทิง แก้ปัญหาเฉพาะหน้าในสภาพแวดล้อมที่เร่งรีบ</div>
+          <div class="job-skills">
+            <span>แก้ปัญหาเฉพาะหน้า</span>
+            <span>ทำงานเป็นทีม</span>
+            <span>การสื่อสารกับลูกค้า</span>
+          </div>
+        </div>
+
+        <!-- ============ งานที่ 4: Sizzler ============ -->
+        <div class="job-card">
+          <span class="job-badge">พาร์ทไทม์ · ปี 1-3</span>
+          <div class="job-role">พนักงานแผนกสลัดบาร์</div>
+          <div class="job-company">Sizzler</div>
+          <div class="job-desc">ดูแลความสะอาดและความพร้อมของสลัดบาร์ ตามมาตรฐานสุขอนามัยด้านอาหาร</div>
+          <div class="job-skills">
+            <span>ระเบียบวินัย</span>
+            <span>สุขอนามัย/ความสะอาด</span>
+            <span>ทำงานเป็นทีม</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -489,7 +707,7 @@
   <section id="projects">
     <div class="wrap">
       <p class="eyebrow"><span class="fn">function</span> <span class="punc">renderProjects</span><span class="punc">()</span> <span class="punc">{</span></p>
-      <h2 class="section-title">Projects<span class="punc">  ผลงานของคุณ</span></h2>
+      <h2 class="section-title">Projects<span class="punc"> ผลงานของคุณ</span></h2>
 
       <!-- ============ โปรเจกต์ที่ 1 (คัดลอกทั้ง block นี้เพื่อเพิ่มโปรเจกต์ใหม่) ============ -->
       <div class="project-card">
@@ -519,7 +737,7 @@
   <section id="certificates">
     <div class="wrap">
       <p class="eyebrow"><span class="punc">[</span> <span class="str">"certificates"</span><span class="punc">:</span> <span class="punc">[...]</span> <span class="punc">]</span></p>
-      <h2 class="section-title">Certificates<span class="punc">  ใบเซอร์และประกาศนียบัตร</span></h2>
+      <h2 class="section-title">Certificates<span class="punc"> ใบเซอร์และประกาศนียบัตร</span></h2>
 
       <div class="cert-list">
         <!-- ============ ใบเซอร์ที่ 1 (คัดลอก block นี้เพื่อเพิ่มใบใหม่) ============ -->
@@ -565,7 +783,7 @@
   <section id="contact">
     <div class="wrap">
       <p class="eyebrow"><span class="kw">export default</span> <span class="fn">contact</span></p>
-      <h2 class="section-title">Contact<span class="punc">  ติดต่อฉัน</span></h2>
+      <h2 class="section-title">Contact<span class="punc"> ช่องทางติดต่อ</span></h2>
 
       <div class="contact-card">
         <!-- 🔧 แก้ตรงนี้: อีเมลของคุณ (แก้ทั้งข้อความและ href="mailto:...") -->
@@ -577,6 +795,7 @@
 
         <!-- 🔧 แก้ตรงนี้: ลิงก์โซเชียลมีเดีย — ลบ <a> อันไหนที่ไม่ใช้ หรือเพิ่มอันใหม่ตามแบบเดิม -->
         <div class="social-row">
+          <a href="https://www.facebook.com/xo.x.por.phel.yex.r" target="_blank" rel="noreferrer">Facebook</a>
         </div>
       </div>
     </div>
